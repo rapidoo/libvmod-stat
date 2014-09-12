@@ -1,2 +1,2 @@
-$Module example 3 Example VMOD
-$Function STRING hello(STRING)
+$Module stat 3 Stat VMOD
+$Function STRING getvisitorid(STRING)
