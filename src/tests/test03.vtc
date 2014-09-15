@@ -9,14 +9,14 @@ varnish v1 -vcl+backend {
 	import stat from "${vmod_topbuild}/src/.libs/libvmod_stat.so";
 
 	sub vcl_deliver {
-		set resp.http.hello = stat.getvisitorid("312");
+		set resp.http.hello = stat.parseip("192.123.34.23");
 	}
 } -start
 
 client c1 {
 	txreq -url "/"
 	rxresp
-	#expect resp.http.hello == "Hello, World"
+	expect resp.http.hello == "023"
 }
 
 client c1 -run
