@@ -1,0 +1,22 @@
+varnishtest "Test stat vmod"
+
+server s1 {
+       rxreq
+       txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import stat from "${vmod_topbuild}/src/.libs/libvmod_stat.so";
+
+	sub vcl_deliver {
+		set resp.http.hello = stat.getrandom();;
+	}
+} -start
+
+client c1 {
+	txreq -url "/"
+	rxresp
+	#expect resp.http.hello == "023"
+}
+
+client c1 -run

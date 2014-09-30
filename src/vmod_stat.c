@@ -18,6 +18,35 @@ init_function(struct vmod_priv *priv, const struct VCL_conf *conf)
 }
 
 VCL_STRING
+vmod_getrandom(const struct vrt_ctx *ctx)
+{
+        char *p;
+        unsigned u, v;
+
+        char random[11];
+        memset( (char*) random, 0, 11);
+
+        u = WS_Reserve(ctx->ws, 0); /* Reserve some work space */
+        p = ctx->ws->f;         /* Front of workspace area */
+
+        getRandom((char*) random);
+
+        v = snprintf(p, u, "%s", random);
+
+        v++;
+        if (v > u) {
+                /* No space, reset and leave */
+                WS_Release(ctx->ws, 0);
+                return (NULL);
+        }
+        /* Update work space with what we've used */
+        WS_Release(ctx->ws, v);
+        return (p);
+}
+
+
+
+VCL_STRING
 vmod_gettimestamp(const struct vrt_ctx *ctx)
 {
         char *p;
@@ -105,6 +134,17 @@ vmod_getvisitorid(const struct vrt_ctx *ctx, VCL_STRING ad_ip)
 	WS_Release(ctx->ws, v);
 	return (p);
 }
+
+int getRandom( char* random){
+
+    int ran;
+    srand(time(NULL));
+    ran = rand() % 9999999999 + 1;
+    return sprintf(random, "%010i", ran);
+
+}
+
+
 
 int getip( char* ad_ip, char* res){
 

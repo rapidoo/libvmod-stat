@@ -1,4 +1,5 @@
 $Module stat 3 Stat VMOD
 $Function STRING getvisitorid(STRING)
 $Function STRING gettimestamp()
+$Function STRING getrandom()
 $Function STRING parseip(STRING)
